@@ -1,0 +1,26 @@
+<!-- hw/templates/hw/base.html -->
+{% load static %}
+<html>
+    <head>
+        <title>Hello, world!</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+    </head>
+    <body>
+    
+        <nav>
+            <ul>
+                <li><a href="{% url 'home_page' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+            </ul>
+    
+        </nav>
+        
+    {% block content %}
+    {% endblock %}
+    
+    <footer>
+        The current time is {{time}}.
+        This page was brought to you by the letters {{letter1}} and {{letter2}}, and by the number {{number}}.
+        </footer>
+    </body>
+</html>
