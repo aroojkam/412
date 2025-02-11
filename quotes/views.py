@@ -11,9 +11,9 @@ QUOTES = [
 ]
 
 IMAGES = [
-    "/static/quotes/images/ma1.jpg",
-    "/static/quotes/images/ma2.jpg",
-    "/static/quotes/images/ma3.jpg"
+    "quotes/images/ma1.jpg",
+    "quotes/images/ma2.jpg",
+    "quotes/images/ma3.jpg"
 ]
 
 def quote(request):
