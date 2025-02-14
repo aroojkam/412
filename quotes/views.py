@@ -29,3 +29,4 @@ def show_all(request):
 def about(request):
     """Display information about Muhammad Ali and the creator."""
     return render(request, 'quotes/about.html')
+                                            

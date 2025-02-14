@@ -1,0 +1,28 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brooklyn Lunch</title>
+    <link rel="stylesheet" href="{% static 'restaurants/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Boston's Best Palestinian Brunch Spots!</h1>
+        <nav>
+            <a href="{% url 'main' %}">Main</a> |
+            <a href="{% url 'order' %}">Order</a> |
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>Page created by <a href="mailto:arooj@bu.edu">arooj@bu.edu</a></p>
+    </footer>
+    
+</body>
+</html>

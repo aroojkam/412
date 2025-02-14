@@ -1,0 +1,12 @@
+{% extends 'restaurants/base.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>Welcome!</h2>
+    <p>Location: 9 Brookline St, Cambridge, MA 02139</p>
+    <h3>Hours of Operation</h3>
+    <table>
+        <tr><td>Monday - Friday</td><td>8:30 AM - 3:00 PM</td></tr>
+    </table>
+    <img src="{% static 'restaurants/images/r1.jpg' %}" alt="Brooklyn Lunch" style="width: 500px; height: auto;">
+{% endblock %}

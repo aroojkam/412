@@ -1,0 +1,67 @@
+/* General Styles */
+body {
+    background-color: #f77008; 
+    color: #ffffff; 
+    font-family: 'Arial', sans-serif;
+    text-align: center; /* Center all content */
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: rgb(16, 64, 25)
+    color: #ffffff;
+    padding: 5px 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 5px;
+    margin: 5px;
+}
+
+nav a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: rgb(16, 64, 25);
+    font-family: 'Georgia', serif;
+}
+
+/* Quote Styling */
+p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #f77008;
+    padding: 15px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+/* Image Styling */
+img {
+    width: 350px;
+    height: auto;
+    border: 5px solid rgb(16, 64, 25);
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+/* Footer */
+footer {
+    background-color: rgb(16, 64, 25);
+    color: #ffffff;
+    padding: 5px;
+    margin-top: 5px;
+    font-weight: #ffffff;
+}

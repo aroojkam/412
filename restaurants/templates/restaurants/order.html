@@ -1,0 +1,50 @@
+{% extends 'restaurants/base.html' %}
+
+{% block content %}
+<div>
+    <h1>Place Your Order</h1>
+
+    <form action="{% url 'confirmation' %}" method="POST">
+        {% csrf_token %}
+        
+        <h2>Select the foods you want:</h2>
+        <input type="checkbox" id="b_pancakes" name="sweet" value="Baklava Pancakes $10">
+        <label for="b_pancakes">Baklava Pancakes $10</label>
+
+        <input type="checkbox" id="k_pancakes" name="sweet" value="Knafeh Pancakes $11">
+        <label for="k_pancakes">Knafeh Pancakes $11</label>
+
+        <input type="checkbox" id="s_eggs" name="savory" value="Shakshuka $8">
+        <label for="s_eggs">Shakshuka $8</label>
+
+        <input type="checkbox" id="o_eggs" name="savory" value="Omelet $7">
+        <label for="o_eggs">Omelet $7</label>
+
+        <h2>Select the drinks you want:</h2>
+        <input type="checkbox" id="coffee" name="drink" value="Coffee $3">
+        <label for="coffee">Coffee $3</label>
+
+        <input type="checkbox" id="chai" name="drink" value="Chai $3">
+        <label for="chai">Chai $3</label>
+
+        <input type="checkbox" id="o_juice" name="drink" value="Orange Juice $2">
+        <label for="o_juice">Orange Juice $2</label>
+
+        <input type="checkbox" id="lemon" name="drink" value="Lemonade $2">
+        <label for="lemon">Lemonade $2</label>
+
+        <h2>Customer Information:</h2>
+        <label for="name"> Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="number">Phone Number:</label>
+        <input type="text" id="number" name="number" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <h2>Place your Order!</h2>
+        <input type="submit">
+    </form>
+</div>
+{% endblock %}
