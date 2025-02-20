@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "restaurants",
     "quotes",
     "formdata", # new app
+    "mini_fb",
 ]
 
 MIDDLEWARE = [
