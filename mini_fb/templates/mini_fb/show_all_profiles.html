@@ -15,6 +15,7 @@
             <td><a href="{% url 'show_profile' profile.pk %}">{{ profile.lastName }}</a></td>
             <td>{{ profile.city }}</td>
             <td><a href="{% url 'show_profile' profile.pk %}"><img src="{{ profile.image_url }}" alt="Profile Image" width="100"></a></td>
+            
         </tr>
         {% endfor %}
     </table>

@@ -1,18 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Application</title>
-    <link rel="stylesheet" href="/static/mini_fb/styles.css"> <!-- Link to external CSS file -->
+    <title>MiniFB</title>
+    <link rel="stylesheet" href="/static/mini_fb/styles.css">
+
 </head>
 <body>
     <header>
-        <h1>My Application</h1>
+        <h1>MiniFB</h1>
         <nav>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/mini_fb/">Profiles</a></li>
+                <li><a href="{% url 'show_all_profiles' %}">All Profiles</a></li>
             </ul>
         </nav>
     </header>
@@ -20,7 +21,7 @@
         {% block content %}{% endblock %}
     </main>
     <footer>
-        <p>&copy; 2025 My Application</p>
+        <p>&copy; 2025 MiniFB</p>
     </footer>
 </body>
 </html>
