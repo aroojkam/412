@@ -14,5 +14,6 @@ class Profile(models.Model):
 
     image_url = models.URLField(default="https://via.placeholder.com/150", blank=False)
     
+    
     def __str__(self):
         return f'{self.firstName} {self.lastName}'
