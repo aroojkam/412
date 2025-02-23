@@ -153,3 +153,4 @@ CS_DEPLOYMENT_HOSTNAME = 'cs-webapps.bu.edu'
 if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
     STATIC_URL = '/arooj/static/'
     MEDIA_URL = '/arooj/media/'
+
