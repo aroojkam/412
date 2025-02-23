@@ -1,4 +1,5 @@
 {% extends 'mini_fb/base.html' %}
+{% load static %}
 
 {% block content %}
     <h2>All Profiles</h2>
@@ -14,8 +15,11 @@
             <td><a href="{% url 'show_profile' profile.pk %}">{{ profile.firstName }}</a></td>
             <td><a href="{% url 'show_profile' profile.pk %}">{{ profile.lastName }}</a></td>
             <td>{{ profile.city }}</td>
-            <td><a href="{% url 'show_profile' profile.pk %}"><img src="{{ profile.image_url }}" alt="Profile Image" width="100"></a></td>
-            
+            <td>
+                <a href="{% url 'show_profile' profile.pk %}">
+                    <img src="{{ profile.image_url }}" alt="{{ profile.firstName }}'s Profile Image" width="100">
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </table>
