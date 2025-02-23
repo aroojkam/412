@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -24,4 +25,5 @@ urlpatterns = [
     path("formdata/", include("formdata.urls")),
     path("restaurants/", include("restaurants.urls")),
     path("mini_fb/", include("mini_fb.urls")),
+    path('', lambda request: redirect('show_all_profiles')),
 ]
