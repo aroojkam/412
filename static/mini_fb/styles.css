@@ -2,7 +2,7 @@
 
 body {
     margin: 30px;
-    background: #d1dedd;
+    background: #f1d9ea;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -12,20 +12,20 @@ ul, li {
 }
 
 h1, h2, h3 {
-    color: #767f7e;
+    color: #926686;
 }
 
 p {
-    color: #828b82;
+    color: #8d818c;
 }
 
 header {
     max-width: 1200px;
     margin: 40px auto;
-    border-bottom: 1px solid #bbc7c7;
+    border-bottom: 1px solid #e4bddf;
 }
 .grid-container {
-    background: #eee;
+    background: #edc2e0;
     max-width: 900px;
     display: grid;
     /* grid-template-columns: 300px 300px 300px; */
@@ -41,7 +41,7 @@ article.featured {
     gap: 60px;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    border-bottom: 1px #bbc7c7;
+    border-bottom: 1px #c7bbc4;
     padding-bottom: 40px;
 }
 
