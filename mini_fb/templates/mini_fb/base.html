@@ -15,11 +15,13 @@
         <nav>
             <ul>
                 <li><a href="{% url 'show_all_profiles' %}">All Profiles</a></li>
+                <li><a href="{% url 'create_profile' %}">Create</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </main>
     <footer>
         <p>&copy; 2025 MiniFB</p>

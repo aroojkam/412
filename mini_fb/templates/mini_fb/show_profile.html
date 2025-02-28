@@ -27,5 +27,17 @@
                 <img src="{{ profile.image_url }}" alt="{{ profile.firstName }}'s Profile Image" width="200">
             </td>
         </tr>
+        <h3>Status Messages</h3>
+        <ul>
+            {% for message in profile.get_status_messages %}
+                <li>{{ message.statusMessage }} - {{ message.published }}</li>
+            {% empty %}
+                <li>No status messages yet.</li>
+            {% endfor %}
+        </ul>
+        <p><a href="{% url 'create_status' profile.pk %}">Post a Status Message</a></p>
+
+
+
     </table>
 {% endblock %}
