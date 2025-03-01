@@ -17,6 +17,7 @@ class Profile(models.Model):
         return f'{self.firstName} {self.lastName}'
     
     def get_absolute_url(self):
+        """Returns the URL to view this profile instance."""
         return reverse('show_profile', kwargs={'pk': self.pk}) 
 
 

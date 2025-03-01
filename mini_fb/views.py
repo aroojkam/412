@@ -1,3 +1,8 @@
+"""
+Filename: views.py
+Description: This file contains views for the MiniFB Django app.
+"""
+
 from django.views.generic import ListView, DetailView, CreateView
 from .models import Profile
 from django.shortcuts import render
