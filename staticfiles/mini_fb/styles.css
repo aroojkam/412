@@ -46,7 +46,8 @@ article.featured {
 }
 
 article img, article.featured img {
-    width: 100%;
+    max-width: 100%; 
+    height: auto;
     border: 4px solid #fff;
     border-radius: 8px;
 }
@@ -54,6 +55,19 @@ article p, article h3 {
     margin: 20px 10px;
 
 }
+
+img {
+    max-width: 100%;  /* Prevents overflow */
+    height: auto;      /* Keeps aspect ratio */
+}
+
+.profile-image {
+    width: 250px;  /* Adjust width as needed */
+    height: 250px;  /* Adjust height as needed */
+    object-fit: cover;  /* Ensures image is cropped, not stretched */
+    border-radius: 10px; /* Optional: Makes corners rounded */
+}
+
 
 nav li {
     display: inline;
