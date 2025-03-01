@@ -65,7 +65,6 @@ img {
     width: 250px;  /* Adjust width as needed */
     height: 250px;  /* Adjust height as needed */
     object-fit: cover;  /* Ensures image is cropped, not stretched */
-    border-radius: 10px; /* Optional: Makes corners rounded */
 }
 
 
