@@ -1,5 +1,6 @@
-<!--
-base.html - Displays...
+<!-- 
+base.html - The main template that serves as the layout for all other pages.
+This file includes a navigation menu, a header, and a footer.
 -->
 {% load static %}
 <!DOCTYPE html>
@@ -8,6 +9,7 @@ base.html - Displays...
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiniFB</title>
+    <!-- Linking the stylesheet for consistent styling across pages -->
     <link rel="stylesheet" href="{% static 'mini_fb/styles.css' %}">
 
 
@@ -17,12 +19,14 @@ base.html - Displays...
         <h1>MiniFB</h1>
         <nav>
             <ul>
+                <!-- Navigation links -->
                 <li><a href="{% url 'show_all_profiles' %}">All Profiles</a></li>
                 <li><a href="{% url 'create_profile' %}">Create</a></li>
             </ul>
         </nav>
     </header>
     <main>
+        <!-- Main content block that will be overridden by child templates -->
         {% block content %}
         {% endblock %}
     </main>
