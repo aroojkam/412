@@ -1,3 +1,7 @@
+<!--
+show_all_profiles.html - Displays all profile names and images.
+-->
+
 {% extends 'mini_fb/base.html' %}
 {% load static %}
 
@@ -18,9 +22,9 @@
             <td>
                 <a href="{% url 'show_profile' profile.pk %}">
                     <img src="{{ profile.image_url }}" alt="{{ profile.firstName }}'s Profile Image" class="profile-image">
-
                 </a>
-            </td> 
+            </td>
+             
         </tr>
         {% endfor %}
     </table>

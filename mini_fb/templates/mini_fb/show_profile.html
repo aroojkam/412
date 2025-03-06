@@ -1,3 +1,8 @@
+<!--
+show_profile.html - Displays profile details, status messages, and images.
+-->
+
+
 {% extends 'mini_fb/base.html' %}
 {% load static %}
 
@@ -30,12 +35,22 @@
         <h3>Status Messages</h3>
         <ul>
             {% for message in profile.get_status_messages %}
-                <li>{{ message.statusMessage }} - {{ message.published }}</li>
-            {% empty %}
-                <li>No status messages yet.</li>
-            {% endfor %}
-        </ul>
+            <li>{{ message.statusMessage }} - {{ message.published }}
+                <a href="{% url 'update_status' message.pk %}">Update</a>
+                <a href="{% url 'delete_status' message.pk %}">Delete</a>
+                            <br>
+                            {% for img in message.get_images %}
+                                <img src="{{ img.image_file.url }}" alt="Status Image" style="max-width: 300px;">
+                            {% endfor %}
+                        </li>
+                    {% empty %}
+                        <li>No status messages yet.</li>
+                    {% endfor %}
+                </ul>
+                
         <p><a href="{% url 'create_status' profile.pk %}">Post a Status Message</a></p>
+        <p><a href="{% url 'update_profile' profile.pk %}" class="btn">Update Profile</a></p>
+
 
 
 

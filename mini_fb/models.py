@@ -1,19 +1,24 @@
-# Create your models here.
+"""
+models.py - Defines database models for MiniFB application.
+This includes Profile, StatusMessage, Image, and StatusImage models.
+"""
 from django.db import models
 from django.urls import reverse
 
 
 class Profile(models.Model):
-    
+    """Model representing a user profile."""
     firstName = models.TextField(blank=False)
     lastName = models.TextField(blank=False)
     city = models.TextField(blank=False)
     email = models.TextField(blank=False)
 
     image_url = models.URLField(default="https://via.placeholder.com/150", blank=False)
+
     
     
     def __str__(self):
+        """String representation of the Profile model."""
         return f'{self.firstName} {self.lastName}'
     
     def get_absolute_url(self):
@@ -29,11 +34,27 @@ class Profile(models.Model):
         return messages
 
     
-class StatusMessage (models.Model):
-
+class StatusMessage(models.Model):
+    """Model representing a status message posted by a user."""
     statusMessage = models.TextField(blank=False)
     published = models.DateTimeField(auto_now=True)
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f'{self.statusMessage}'
+    def get_images(self):
+        """Retrieve all images associated with this status message."""
+        return Image.objects.filter(statusimage__StatusMessage_fk=self)
+    
+
+class Image(models.Model):
+    """Model representing an uploaded image."""
+    profile_fk = models.ForeignKey("Profile", on_delete=models.CASCADE)
+    image_file = models.ImageField(upload_to='status_images/', blank=True)
+    time_stamp = models.DateTimeField(auto_now=True)
+    caption = models.TextField(blank=True)  # Caption should be optional
+
+
+class StatusImage(models.Model):
+    """Model linking an Image to a StatusMessage (many-to-many relationship)."""
+    image_fk = models.ForeignKey("Image", on_delete=models.CASCADE)
+    StatusMessage_fk = models.ForeignKey("StatusMessage", on_delete=models.CASCADE)
+

@@ -1,10 +1,14 @@
+<!--
+create_status_form.html - Form for posting a status message with an image upload.
+-->
+
 {% extends 'mini_fb/base.html' %}
 {% block content %}
 <h1>Post a Status Message</h1>
-<form action="{% url 'create_status' profile.pk %}" method="POST">
+<form action="{% url 'create_status' pk=profile.pk %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
+    <input type="file" name="files" multiple>
     <input type="submit" value="Post">
 </form>
 {% endblock %}
-
