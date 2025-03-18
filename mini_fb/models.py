@@ -30,6 +30,13 @@ class Profile(models.Model):
         friends = Friend.objects.filter(models.Q(profile1=self) | models.Q(profile2=self))
         return [f.profile1 if f.profile2 == self else f.profile2 for f in friends]
 
+    def get_news_feed(self):
+            """Retrieve status messages from the user and their friends, ordered by most recent."""
+            friends = self.get_friends()
+            friend_ids = [friend.id for friend in friends] + [self.id]  # Include self in the feed
+            return StatusMessage.objects.filter(profile_id__in=friend_ids).order_by('-published')
+
+
     def add_friend(self, other):
         """Add a new friend relationship if it does not already exist."""
         if self == other:
