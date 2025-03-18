@@ -10,6 +10,7 @@ from .models import Profile, StatusMessage, Image, StatusImage
 from django.urls import reverse 
 
 from django.views.generic.edit import CreateView
+from django.views import View
 
 
 class ShowAllProfilesView(ListView):
@@ -100,3 +101,23 @@ class UpdateStatusMessageView(UpdateView):
         print(f"DEBUG: Profile PK = {self.object.profile.pk}")  # Debugging
         return reverse('show_profile', kwargs={'pk': self.object.profile.pk})
 
+
+class CreateFriendView(View):
+    """View to handle adding a friend."""
+
+    def dispatch(self, request, *args, **kwargs):
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        other_profile = get_object_or_404(Profile, pk=self.kwargs['other_pk'])
+        profile.add_friend(other_profile)
+        return redirect(reverse('show_profile', kwargs={'pk': profile.pk}))
+    
+
+class ShowFriendSuggestionsView(DetailView):
+    """View to show friend suggestions."""
+    model = Profile
+    template_name = "mini_fb/friend_suggestions.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['friend_suggestions'] = self.object.get_friend_suggestions()
+        return context

@@ -51,6 +51,21 @@ show_profile.html - Displays profile details, status messages, and images.
         <p><a href="{% url 'create_status' profile.pk %}">Post a Status Message</a></p>
         <p><a href="{% url 'update_profile' profile.pk %}" class="btn">Update Profile</a></p>
 
+        <h3>Friends</h3>
+        <ul>
+            {% for friend in profile.get_friends %}
+                <li>
+                    <img src="{{ friend.image_url }}" alt="{{ friend.firstName }}'s Profile Image" class="profile-image" style="width:50px; height:50px; border-radius:50%;">
+                    <a href="{% url 'show_profile' friend.pk %}">{{ friend.firstName }} {{ friend.lastName }}</a>
+                </li>
+            {% empty %}
+                <li>No friends yet.</li>
+            {% endfor %}
+        </ul>
+        <p><a href="{% url 'friend_suggestions' profile.pk %}">View Friend Suggestions</a></p>
+
+
+
 
 
 
