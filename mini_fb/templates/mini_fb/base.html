@@ -19,9 +19,22 @@ This file includes a navigation menu, a header, and a footer.
         <h1>MiniFB</h1>
         <nav>
             <ul>
-                <!-- Navigation links -->
                 <li><a href="{% url 'show_all_profiles' %}">All Profiles</a></li>
-                <li><a href="{% url 'create_profile' %}">Create</a></li>
+                
+                {% if user.is_authenticated %}
+                    <li>Welcome, {{ user.username }}</li>
+                    <li><a href="{% url 'update_profile' %}">Edit Profile</a></li>
+                    <li>
+                        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'create_profile' %}">Create Profile</a></li>  <!-- ✅ Add this button -->
+                    
+                {% endif %}
             </ul>
         </nav>
     </header>

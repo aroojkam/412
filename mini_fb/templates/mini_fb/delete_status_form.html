@@ -14,5 +14,5 @@ This page asks the user for confirmation before deleting a status message.
     <input type="submit" value="Confirm">
 </form>
 <!-- Cancel button redirects user back to the profile page -->
-<a href="{% url 'show_profile' status_message.profile.pk %}">Cancel</a>
+<a href="{% url 'show_profile' pk=status_message.profile.pk %}">Cancel</a>
 {% endblock %}

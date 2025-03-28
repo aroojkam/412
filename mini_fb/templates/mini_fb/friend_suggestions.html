@@ -1,18 +1,21 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
-    <h2>Friend Suggestions for {{ profile.firstName }}</h2>
+    <h2>Friend Suggestions</h2>
     <ul>
         {% for friend in friend_suggestions %}
             <li>
                 <img src="{{ friend.image_url }}" alt="{{ friend.firstName }}'s Profile Image" class="profile-image" style="width:50px; height:50px; border-radius:50%;">
                 <a href="{% url 'show_profile' friend.pk %}">{{ friend.firstName }} {{ friend.lastName }}</a>
-                <a href="{% url 'add_friend' pk=profile.pk other_pk=friend.pk %}">(Add Friend)</a>
+                <form method="post" action="{% url 'add_friend' other_pk=friend.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Add Friend</button>
+                </form>
             </li>
         {% empty %}
             <li>No friend suggestions available.</li>
         {% endfor %}
     </ul>
 
-    <p><a href="{% url 'show_profile' profile.pk %}">Back to Profile</a></p>
+    <p><a href="{% url 'show_profile' pk=request.user.profile.pk %}">Back to Profile</a></p>
 {% endblock %}

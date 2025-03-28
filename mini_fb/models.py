@@ -5,37 +5,44 @@ This includes Profile, StatusMessage, Image, and StatusImage models.
 from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
+from django.contrib.auth.models import User
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Profile(models.Model):
-    """Model representing a user profile."""
-    firstName = models.TextField(blank=False)
-    lastName = models.TextField(blank=False)
-    city = models.TextField(blank=False)
-    email = models.TextField(blank=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile", default=1)
+    firstName = models.CharField(max_length=100)
+    lastName = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    image_url = models.URLField(default="https://via.placeholder.com/150", blank=True)
+    friends = models.ManyToManyField("self", symmetrical=True, blank=True)
 
-    image_url = models.URLField(default="https://via.placeholder.com/150", blank=False)
-
-    def get_friends(self):
-        """Retrieve all friends of this Profile."""
-        friends = Friend.objects.filter(models.Q(profile1=self) | models.Q(profile2=self))
-        return [f.profile1 if f.profile2 == self else f.profile2 for f in friends]
-    
     def __str__(self):
-        """String representation of the Profile model."""
-        return f'{self.firstName} {self.lastName}'
+        return f"{self.firstName} {self.lastName}"
     
     def get_friends(self):
-        """Retrieve all friends of this Profile."""
-        friends = Friend.objects.filter(models.Q(profile1=self) | models.Q(profile2=self))
-        return [f.profile1 if f.profile2 == self else f.profile2 for f in friends]
-
+        """Get all friends of this profile."""
+        return self.friends.all()
+    
     def get_news_feed(self):
-            """Retrieve status messages from the user and their friends, ordered by most recent."""
-            friends = self.get_friends()
-            friend_ids = [friend.id for friend in friends] + [self.id]  # Include self in the feed
-            return StatusMessage.objects.filter(profile_id__in=friend_ids).order_by('-published')
-
+        """Retrieve status messages from friends, ordered by most recent."""
+        friend_ids = [friend.id for friend in self.friends.all()] + [self.id]
+        return StatusMessage.objects.filter(profile_id__in=friend_ids).order_by('-published')
+    
+    def get_absolute_url(self):
+        """Return the URL to the profile page."""
+        return reverse('show_profile', kwargs={'pk': self.pk})
+    
+    def get_status_messages(self):
+        """Return all status messages posted by this profile."""
+        return StatusMessage.objects.filter(profile=self).order_by('-published')
+    
+    def get_friend_suggestions(self):
+        """Suggest potential friends who are not yet friends with this profile."""
+        return Profile.objects.exclude(id=self.id).exclude(id__in=[friend.id for friend in self.friends.all()])
 
     def add_friend(self, other):
         """Add a new friend relationship if it does not already exist."""
@@ -50,24 +57,21 @@ class Profile(models.Model):
         if not existing_friendship:
             Friend.objects.create(profile1=self, profile2=other)
 
-    def get_friend_suggestions(self):
-        """Suggest potential friends who are not yet friends with this profile."""
-        all_profiles = Profile.objects.exclude(id=self.id)  # Exclude self
-        current_friends = self.get_friends()
-        friend_suggestions = all_profiles.exclude(id__in=[friend.id for friend in current_friends])
-        return friend_suggestions
-    
-    def get_absolute_url(self):
-        """Returns the URL to view this profile instance."""
-        return reverse('show_profile', kwargs={'pk': self.pk}) 
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    """Only create a profile if it does not already exist."""
+    if created and not hasattr(instance, "profile"):
+        Profile.objects.create(user=instance)
 
-
-    def get_status_messages(self):
-        '''Return all of the status messages about this profile.'''
-        #filter StatusMessage objects by their profile (foreign key), and order them by timestamp
-
-        messages = StatusMessage.objects.filter(profile=self)
-        return messages
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, created, **kwargs):
+    # Only create a profile if one doesn't exist
+    if created:
+        Profile.objects.create(user=instance)
+    else:
+        # If the user already exists, just save the existing profile
+        if hasattr(instance, 'profile'):
+            instance.profile.save()
 
     
 class StatusMessage(models.Model):
@@ -79,6 +83,7 @@ class StatusMessage(models.Model):
     def get_images(self):
         """Retrieve all images associated with this status message."""
         return Image.objects.filter(statusimage__StatusMessage_fk=self)
+    
     
 
 class Image(models.Model):
