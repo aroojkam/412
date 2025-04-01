@@ -1,0 +1,32 @@
+<!-- templates/voter_analytics/graphs.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voter Graphs</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Voter Data Visualizations</h1>
+
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Filter</button>
+        <a href="{% url 'voters' %}">Back to Voter List</a>
+    </form>
+
+    <h2>Year of Birth Distribution</h2>
+    <div id="birth_histogram">
+        {{ charts.birth_histogram|safe }}
+    </div>
+
+    <h2>Party Affiliation</h2>
+    <div id="party_pie">
+        {{ charts.party_pie|safe }}
+    </div>
+
+    <h2>Election Participation</h2>
+    <div id="election_bar">
+        {{ charts.election_bar|safe }}
+    </div>
+</body>
+</html>

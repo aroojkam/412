@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "quotes",
     "formdata", # new app
     "mini_fb",
+    "marathon_analytics",
+    "voter_analytics",
 ]
 
 MIDDLEWARE = [
