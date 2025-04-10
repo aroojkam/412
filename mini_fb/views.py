@@ -47,6 +47,7 @@ class CreateProfileView(CreateView):
         context['user_form'] = UserCreationForm()
         return context
 
+
     def form_valid(self, form):
         """Handle form submission for both user creation and profile creation."""
         user_form = UserCreationForm(self.request.POST)

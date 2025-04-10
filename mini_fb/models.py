@@ -12,7 +12,7 @@ from django.dispatch import receiver
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile", default=1)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile", null=True, blank=True)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -58,20 +58,15 @@ class Profile(models.Model):
             Friend.objects.create(profile1=self, profile2=other)
 
 @receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-    """Only create a profile if it does not already exist."""
-    if created and not hasattr(instance, "profile"):
-        Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_profile(sender, instance, created, **kwargs):
-    # Only create a profile if one doesn't exist
+def create_or_save_profile(sender, instance, created, **kwargs):
+    """Create or update a Profile whenever a User is created."""
     if created:
         Profile.objects.create(user=instance)
     else:
-        # If the user already exists, just save the existing profile
+        # Save the profile if it already exists
         if hasattr(instance, 'profile'):
             instance.profile.save()
+
 
     
 class StatusMessage(models.Model):
