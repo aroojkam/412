@@ -1,3 +1,9 @@
+# views.py
+# This module contains all view logic for the Django project,
+# including user authentication, restaurant management, list
+# handling (create, edit, share), user profile access, and
+# review and note interaction.
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -19,12 +25,13 @@ from django.views.generic.edit import CreateView
 
 from django.db.models import Q
 
-
+# Homepage with restaurant search functionality
 class RestaurantListView(ListView):
     model = Restaurant
     template_name = "project/home.html"
     context_object_name = "restaurants"
 
+    # Filter restaurants by search query if provided
     def get_queryset(self):
         queryset = super().get_queryset()
         q = self.request.GET.get("q")
@@ -37,12 +44,13 @@ class RestaurantListView(ListView):
             )
         return queryset
     
+     # Include search query in context
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.request.GET.get('q', '')
         return context
 
-
+# Restaurant detail page with review and list interaction
 @login_required
 @require_http_methods(["GET", "POST"])
 def restaurant_detail(request, pk):
@@ -52,7 +60,7 @@ def restaurant_detail(request, pk):
     list_form = AddToListForm(user=request.user)
 
     if request.method == 'POST':
-        # ⭐ Handle Review Submission
+        # Handle Review Submission
         if 'submit_review' in request.POST:
             review_form = ReviewForm(request.POST)
             if review_form.is_valid():
@@ -63,7 +71,7 @@ def restaurant_detail(request, pk):
                 messages.success(request, "Review submitted!")
                 return redirect('restaurant-detail', pk=pk)
 
-        # ⭐ Handle Add to List
+        # Handle Add to List
         elif 'submit_list' in request.POST:
             list_form = AddToListForm(request.POST, user=request.user)
             if list_form.is_valid():
@@ -79,7 +87,7 @@ def restaurant_detail(request, pk):
                 return redirect('restaurant-detail', pk=pk)
 
 
-        # ⭐ Handle Removal from List
+        # Handle Removal from List
         elif 'remove_from_list' in request.POST:
             list_id = request.POST.get("list_id")
             try:
@@ -101,17 +109,18 @@ def restaurant_detail(request, pk):
         'list_form': list_form,
     })
 
+# Restaurant creation view (restricted to logged-in users)
 class RestaurantCreateView(LoginRequiredMixin, CreateView):
     model = Restaurant
     form_class = RestaurantForm
     template_name = "project/restaurant_form.html"
-    success_url = "/project/"  # or use reverse_lazy('restaurant-list')
+    success_url = "/project/" 
 
     def form_valid(self, form):
-        form.instance.user = self.request.user  # ✅ Associate current user
+        form.instance.user = self.request.user  
         return super().form_valid(form)
 
-
+# User profile page showing owned and shared lists
 @login_required
 def profile_view(request):
     user = request.user
@@ -126,7 +135,7 @@ def profile_view(request):
         "shared_lists": shared_lists
     })
 
-
+# View details of a specific list
 @login_required
 def list_detail(request, pk):
     list_obj = get_object_or_404(List, pk=pk)
@@ -196,14 +205,14 @@ def list_detail(request, pk):
         "all_users": User.objects.exclude(id=request.user.id),  # Exclude current user from share options
     })
 
-
+# View to handle creation of a new list
 @login_required
 def list_create(request):
     if request.method == "POST":
         form = ListForm(request.POST)
         if form.is_valid():
             new_list = form.save(commit=False)
-            new_list.user = request.user
+            new_list.user = request.user # Assign current user as owner
             new_list.save()
             form.save_m2m()
             return redirect("profile")
@@ -211,19 +220,19 @@ def list_create(request):
         form = ListForm()
     return render(request, "project/list_form.html", {"form": form})
 
-
+# View to handle user sign-up logic
 def signup_view(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
+            user = form.save() # Create the user
+            login(request, user) #log them in
             return redirect("restaurant-list")
     else:
         form = SignUpForm()
     return render(request, "project/signup.html", {"form": form})
 
-
+# View to handle user login logic
 def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -235,11 +244,12 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, "project/login.html", {"form": form})
 
-
+# Logout the user and redirect to login page
 def logout_view(request):
     logout(request)
     return redirect("login")
 
+# View for editing the user's profile
 @login_required
 def edit_profile(request):
     profile = request.user.profile
@@ -284,6 +294,7 @@ def edit_list(request, pk):
 def delete_list(request, pk):
     list_obj = get_object_or_404(List, pk=pk)
 
+     # Only owner can delete
     if request.user != list_obj.user:
         messages.error(request, "You do not have permission to delete this list.")
         return redirect('list-detail', pk=pk)
@@ -298,7 +309,7 @@ def delete_list(request, pk):
 @require_POST
 def share_list(request, pk):
     list_obj = get_object_or_404(List, pk=pk)
-
+    # Only owner can share
     if request.user != list_obj.user:
         messages.error(request, "You can only share lists you created.")
         return redirect('list-detail', pk=pk)
@@ -319,6 +330,7 @@ def share_list(request, pk):
 
     return redirect('list-detail', pk=pk)
 
+# Alternate list creation view with redirect to list detail
 @login_required
 def list_add(request):
     if request.method == "POST":
@@ -327,7 +339,7 @@ def list_add(request):
             new_list = form.save(commit=False)
             new_list.user = request.user
             new_list.save()
-            form.save_m2m()  # ✅ Save many-to-many (shared users)
+            form.save_m2m()  
             messages.success(request, "List created successfully.")
             return redirect("list-detail", pk=new_list.pk)
     else:
@@ -335,6 +347,7 @@ def list_add(request):
 
     return render(request, "project/list_form.html", {"form": form})
 
+# View for publicly viewing another user's profile
 @login_required
 def public_profile(request, user_id):
     target_user = get_object_or_404(User, pk=user_id)
@@ -353,6 +366,7 @@ def public_profile(request, user_id):
         "created_lists": created_lists,
     })
 
+# View to edit a restaurant (only if current user created it)
 @login_required
 def edit_restaurant(request, pk):
     restaurant = get_object_or_404(Restaurant, pk=pk)
@@ -371,6 +385,7 @@ def edit_restaurant(request, pk):
 
     return render(request, 'project/restaurant_form.html', {'form': form})
 
+# View to display a list of all users (excluding current user)
 @login_required
 def user_list_view(request):
     query = request.GET.get('q', '')
@@ -380,7 +395,7 @@ def user_list_view(request):
         users = users.filter(
             Q(username__icontains=query) |
             Q(profile__name__icontains=query) |
-            Q(profile__location__icontains=query) |  # Optional: search by profile location
+            Q(profile__location__icontains=query) |  # search by profile location
             Q(owned_lists__name__icontains=query)
         ).distinct()
 

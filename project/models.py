@@ -1,9 +1,11 @@
+# models.py - Defines the database schema for the application
 from django.db import models
 
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
 
+# Represents a restaurant added by a user
 class Restaurant(models.Model):
     name = models.CharField(max_length=200)
     location = models.TextField()
@@ -18,7 +20,7 @@ class Restaurant(models.Model):
     def __str__(self):
         return self.name
     
-
+# Stores additional profile data for each user
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     name = models.CharField(max_length=100, default='')
@@ -36,7 +38,7 @@ class Profile(models.Model):
     def shared_lists(self):
         return self.user.shared_lists.all()
 
-
+# Represents a named list of restaurants owned by a user
 class List(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_lists')
@@ -46,7 +48,7 @@ class List(models.Model):
     def __str__(self):
         return self.name
     
-
+# Maps restaurants to specific lists, optionally with a user note
 class ListItem(models.Model):
     list = models.ForeignKey(List, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
@@ -55,7 +57,7 @@ class ListItem(models.Model):
     def __str__(self):
         return f"{self.restaurant.name} in {self.list.name}"
 
-
+# Stores reviews written by users about restaurants
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)

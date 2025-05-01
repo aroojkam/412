@@ -1,3 +1,11 @@
+# urls.py
+# This file maps URL patterns to corresponding views across the app.
+# It includes paths for user authentication, profile handling,
+# restaurant CRUD operations, list management, and shared views.
+# All route names are defined with the `name` parameter for use in templates and redirects.
+
+
+
 from django.urls import path
 from . import views
 from .views import (
@@ -14,7 +22,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('profile/', profile_view, name='profile'),
-    path('profile/edit/', edit_profile, name='edit-profile'),  # now works!
+    path('profile/edit/', edit_profile, name='edit-profile'), 
     path('list/add/', list_create, name='list-add'),
     path('list/<int:pk>/', list_detail, name='list-detail'),
     path('list/<int:pk>/edit/', edit_list, name='edit-list'),
