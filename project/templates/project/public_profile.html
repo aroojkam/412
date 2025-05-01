@@ -1,0 +1,57 @@
+{% extends 'project/base.html' %}
+{% block title %}{{ target_user.username }}'s Profile{% endblock %}
+{% block content %}
+
+<div class="card p-4 mb-4 shadow-sm">
+    <div class="d-flex align-items-center">
+        {% if profile.profile_image %}
+            <img src="{{ profile.profile_image }}" class="rounded-circle me-3 profile-image" alt="Profile Image">
+        {% else %}
+            <img src="https://via.placeholder.com/80" class="rounded-circle me-3 profile-image" alt="No Image">
+        {% endif %}
+
+        <div>
+            <h4 class="mb-0">{{ target_user.username }}</h4>
+            <small class="text-muted">{{ profile.name }} {{ target_user.last_name }}</small><br>
+            <small class="text-muted">{{ profile.location }}</small>
+        </div>
+    </div>
+</div>
+
+{% if created_lists %}
+<div class="d-flex justify-content-end align-items-center mb-4">
+    <a href="{% url 'list-add' %}" class="btn btn-primary">➕ Create New List</a>
+</div>
+{% endif %}
+
+<div class="row">
+    {% if created_lists %}
+    <div class="col-md-6">
+        <h5 class="text-center text-primary">Their Created Lists</h5>
+        <ul class="list-group shadow-sm">
+            {% for lst in created_lists %}
+                <li class="list-group-item">
+                    <a href="{% url 'list-detail' lst.pk %}">{{ lst.name }}</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">They haven't created any lists yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="col-md-6">
+        <h5 class="text-center text-success">Lists Shared With You</h5>
+        <ul class="list-group shadow-sm">
+            {% for lst in shared_lists %}
+                <li class="list-group-item">
+                    <a href="{% url 'list-detail' lst.pk %}">{{ lst.name }}</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">No lists shared with you.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

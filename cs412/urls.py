@@ -27,9 +27,8 @@ urlpatterns = [
     path("quotes/", include("quotes.urls")),
     path("formdata/", include("formdata.urls")),
     path("restaurants/", include("restaurants.urls")),
-    path("mini_fb/", include("mini_fb.urls")),
-    path('', lambda request: redirect('show_all_profiles')),
     path('voter_analytics/', include('voter_analytics.urls')),
+    path("project/", include("project.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

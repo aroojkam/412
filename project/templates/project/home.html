@@ -1,0 +1,46 @@
+{% extends 'project/base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1 class="fw-bold" style="color: #4d2f13;">Find Your Food</h1>
+    <p class="lead" style="color: #ff924c;">Search by cuisine, location, or name</p>
+</div>
+
+<form method="get" class="mb-5 d-flex justify-content-center">
+    <div class="input-group w-75">
+        <input type="text" name="q" class="form-control" placeholder="Try 'Italian' or 'Boston'" value="{{ search_query }}">
+        <button class="btn btn-teal" type="submit">Search</button>
+    </div>
+</form>
+
+{% if search_query %}
+<div class="text-center mb-4">
+    <p>Showing results for: <strong>{{ search_query }}</strong></p>
+</div>
+{% endif %}
+
+<div class="row">
+    {% for restaurant in restaurants %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ restaurant.image }}" class="card-img-top" alt="{{ restaurant.name }}" style="height: 200px; object-fit: cover;">
+                <div class="card-body text-center">
+                    <h5 class="card-title" style="color: #e07a5f;">
+                        <a href="{% url 'restaurant-detail' restaurant.pk %}" class="text-decoration-none text-dark">
+                            {{ restaurant.name }}
+                        </a>
+                    </h5>
+                    <p class="card-text">{{ restaurant.cuisine }}</p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-center">No restaurants found. Try a different keyword.</p>
+    {% endfor %}
+</div>
+
+<div class="text-center mt-5">
+    <a class="btn btn-teal btn-lg" href="{% url 'restaurant-add' %}">➕ Add a New Restaurant</a>
+</div>
+{% endblock %}

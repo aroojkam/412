@@ -41,9 +41,9 @@ INSTALLED_APPS = [
     "restaurants",
     "quotes",
     "formdata", # new app
-    "mini_fb",
     "marathon_analytics",
     "voter_analytics",
+    'project', 
 ]
 
 MIDDLEWARE = [
@@ -63,6 +63,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [],
         "APP_DIRS": True,
+        'DIRS': [BASE_DIR / "templates"], #new
         "OPTIONS": {
             'string_if_invalid' : 'WARNING: {{%s}} not a valid context variable.',
             "context_processors": [
@@ -156,3 +157,8 @@ if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
     STATIC_URL = '/arooj/static/'
     MEDIA_URL = '/arooj/media/'
 
+TEMPLATES[0]['DIRS'] = [BASE_DIR / "templates"] #New
+
+LOGIN_REDIRECT_URL = '/' #New
+LOGOUT_REDIRECT_URL = '/login/' #New
+LOGIN_URL = '/login/' #New

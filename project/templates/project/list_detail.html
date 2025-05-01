@@ -1,0 +1,181 @@
+{% extends 'project/base.html' %}
+{% block title %}List Detail{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-4">
+    <h2 class="fw-bold" style="color: #ff924c;">{{ list.name }}</h2>
+    <p><strong>Description:</strong> {{ list.description }}</p>
+    <p><strong>Created by:</strong> 
+        <a href="{% url 'public-profile' list.user.id %}">{{ list.user.username }}</a>
+      </p>
+      
+      <p><strong>Shared with:</strong>
+        {% if list.users_shared_with.all %}
+          {% for shared_user in list.users_shared_with.all %}
+            <a href="{% url 'public-profile' shared_user.id %}">{{ shared_user.username }}</a>{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        {% else %}
+          No one
+        {% endif %}
+      </p>      
+</div>
+
+<hr>
+
+<h4 class="text-center mt-5 mb-4">Restaurants in this List</h4>
+<!-- List Controls -->
+<div class="mb-4 text-center">
+    <!-- Edit List Toggle Button -->
+    <button class="btn btn-outline-warning me-2" onclick="toggleEditList()">✏️ Edit List</button>
+
+    <!-- Delete List -->
+    <form action="{% url 'delete-list' list.pk %}" method="post" style="display:inline;">
+      {% csrf_token %}
+      <button class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this list?');">🗑 Delete List</button>
+    </form>
+</div>
+
+<!-- Edit List Form (Hidden by Default) -->
+<div id="edit-list-form" class="card mb-4" style="display: none;">
+  <div class="card-body">
+    <h5>Edit List Info</h5>
+    <form method="post" action="{% url 'edit-list' list.pk %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" name="name" value="{{ list.name }}" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control">{{ list.description }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-success">💾 Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- Share and Add Restaurant Section Side-by-Side -->
+<div class="row my-5">
+    <!-- Share This List -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="card-title text-center text-muted mb-3">🔗 Share This List</h6>
+          <form method="post" action="{% url 'share-list' list.pk %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label">Select User:</label>
+              <select name="user_id" class="form-select form-select-sm">
+                {% for user in all_users %}
+                  {% if user != request.user and user not in list.users_shared_with.all %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+            <div class="text-center">
+              <button class="btn btn-sm btn-outline-primary">➕ Share</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Add Restaurant to List -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h6 class="card-title text-center text-muted mb-3">🍽 Add Restaurant</h6>
+          <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="id_restaurant" class="form-label">Select Restaurant:</label>
+              {{ form.restaurant }}
+            </div>
+            <div class="mb-3">
+              <label for="id_note" class="form-label">Note (optional):</label>
+              {{ form.note }}
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-sm btn-success">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+<script>
+  function toggleEditList() {
+    const form = document.getElementById("edit-list-form");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+  }
+</script>
+
+<div class="row">
+  {% for item in items %}
+  <div class="col-md-4 mb-4">
+    <a href="{% url 'restaurant-detail' item.restaurant.id %}" class="text-decoration-none text-dark">
+      <div class="card h-100">
+        {% if item.restaurant.image %}
+          <img src="{{ item.restaurant.image }}" class="card-img-top" alt="{{ item.restaurant.name }}" style="height: 200px; object-fit: cover;">
+        {% else %}
+          <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top" alt="No Image">
+        {% endif %}
+        <div class="card-body text-center">
+          <h5 class="card-title" style="color: #e07a5f;">{{ item.restaurant.name }}</h5>
+          <p class="mb-1" id="note-display-{{ item.id }}">
+            {{ item.note|default:"(No note yet)" }}
+        </p>
+        
+        </div>
+      </div>
+    </a>
+
+    <div class="mt-2 text-center">
+      <!-- Edit Note Button -->
+      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleEdit({{ item.id }})">✏️ Edit Note</button>
+
+      <!-- Edit Note Form -->
+      <div id="note-form-{{ item.id }}" style="display: none;" class="mt-2">
+        <form method="post" class="d-flex align-items-center justify-content-center">
+          {% csrf_token %}
+          <input type="hidden" name="edit_item_id" value="{{ item.id }}">
+          <input type="text" name="new_note" value="{{ item.note }}" class="form-control me-2" style="max-width: 250px;">
+          <button class="btn btn-sm btn-primary me-2">💾 Save</button>
+          <button type="button" class="btn btn-sm btn-outline-danger" onclick="cancelEdit({{ item.id }})">✖ Cancel</button>
+        </form>
+      </div>
+
+      <!-- Remove Button -->
+      <form method="post" class="mt-2 d-inline-block">
+        {% csrf_token %}
+        <input type="hidden" name="remove_item_id" value="{{ item.id }}">
+        <button class="btn btn-sm btn-danger">Remove</button>
+      </form>
+    </div>
+  </div>
+  {% empty %}
+    <p class="text-center">No restaurants added yet.</p>
+  {% endfor %}
+</div>
+
+<script>
+  function toggleEdit(id) {
+    document.getElementById('note-display-' + id).style.display = 'none';
+    document.getElementById('note-form-' + id).style.display = 'block';
+  }
+
+  function cancelEdit(id) {
+    document.getElementById('note-display-' + id).style.display = 'block';
+    document.getElementById('note-form-' + id).style.display = 'none';
+  }
+
+  function toggleAddForm() {
+    const formContainer = document.getElementById('add-form-container');
+    formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
+
+{% endblock %}
